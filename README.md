@@ -22,3 +22,7 @@ A new timeseries entry should have :
 
 Organization || Type || Source || UUID || interval || naamlizard
 
+Main Script uses an APIkey of the account: sa_monitoring
+
+If a new organization is added to the .csv, read rights of that organization has to be asked to the account.
+
