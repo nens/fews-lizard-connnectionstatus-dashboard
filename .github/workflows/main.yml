@@ -25,7 +25,7 @@ jobs:
       - name: Publish the Docker image
         run: |
           docker login -u publisher -p ${{ secrets.GITHUB_TOKEN }} docker.pkg.github.com
-          docker tag fews-lizard-connnectionstatus-dashboard_web docker.pkg.github.com/nens/fews-lizard-connnectionstatus-dashboard:master
-          docker push docker.pkg.github.com/nens/fews-lizard-connnectionstatus-dashboard:master
+          docker tag fews-lizard-connnectionstatus-dashboard_web docker.pkg.github.com/nens/fews-lizard-connnectionstatus-dashboard/dashboard:master
+          docker push docker.pkg.github.com/nens/fews-lizard-connnectionstatus-dashboard/dashboard:master
         if: github.ref == 'refs/heads/master'
         # Running this job only for master branch.
