@@ -18,9 +18,7 @@ Dashboard is configured from the timeserieslist_config.csv file in csv_files fol
 
 You can add new time series for different organizations/ different sources to the csv file. Check for spelling if an organization, source already exists in the csv file.
 
+A new timeseries entry should have :
 
+Organization || Type || Source || UUID || interval || naamlizard
 
-Dagrapportage voor de gemeente Utrecht. Bestaande uit neerslag, BBB en overstort informatie.
-
-Data wordt opgehaald uit Lizard en getoond in een Dash dashboard. Het dashboar wordt gehost
-vanaf github in een docker container. Deze wordt ontsloten op: .....
