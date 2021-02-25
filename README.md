@@ -16,13 +16,13 @@ Dashboard is configured from the timeserieslist_config.csv file in csv_files fol
 
 - Municipality
 
-You can add new time series for different organizations/ different sources to the csv file. Check for spelling if an organization, source already exists in the csv file.
+You can add new time series for different organizations/ different sources to the csv file. **Check for spelling if an organization, source already exists in the csv file.**
 
 A new timeseries entry should have :
 
 Organization || Type || Source || UUID || interval || naamlizard
 
-Main Script uses an APIkey of the account: sa_monitoring
+Main Script uses an APIkey of the account: **sa_monitoring**
 
 If a new organization is added to the .csv, read rights of that organization has to be asked to the account.
 
