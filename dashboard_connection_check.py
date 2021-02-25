@@ -16,12 +16,11 @@ import dash
 import dash_html_components as html
 import dash_core_components as dcc
 
-
-PATH = pathlib.Path().parent
-DATA_PATH = PATH.joinpath("data").resolve()
-APP_PATH = str(pl.Path().parent.resolve())
 height = 750
 lizard_color = "#3b3838"
+PATH = pathlib.Path(__file__).parent
+DATA_PATH = PATH.joinpath("data").resolve()
+APP_PATH = str(pl.Path(__file__).parent.resolve())
 app = dash.Dash(__name__)
 server = app.server
 
@@ -31,7 +30,7 @@ app.config.suppress_callback_exceptions = True
 
 
 username = "__key__"
-password = "zp88odz5.WquY7X2M1xmCjLUR5zPV6HTflOmR3uSG"
+password = "FS3cDFnh.QMGHUH8owuiSkezsV6SHfq6IkFe0YWeO"
 headers = {"username": username, "password": password}
 
 
@@ -335,7 +334,6 @@ def select_organization_source(
     return df
 
 
-app = dash.Dash()
 # --------------------------------------------------------------------------------------------------------------------------
 # define dashboard layout
 # Banner
@@ -569,7 +567,7 @@ content = html.Div(
                     className="row",
                 ),
             ],
-            className="six columns",
+            className="eight columns",
         ),
     ],
     className="row flex-display",
