@@ -453,7 +453,7 @@ content = html.Div(
                         {"label": "Provinces", "value": "Province"},
                         {"label": "Municipalities", "value": "Municipality"},
                         {"label": "Countrywide", "value": "Country"},
-                        {"label": "Drinking Companies", "value": "Drinking"},
+                        {"label": "Drinking Water Companies", "value": "Drinking"},
                     ],
                     value="Waterboard",
                 ),
@@ -465,7 +465,7 @@ content = html.Div(
                 ),
                 html.Br([]),
                 html.Br([]),
-                html.H5("Info About the System ??", style={"font-weight": "bold"}),
+                html.H5("Info About the System", style={"font-weight": "bold"}),
                 html.Br([]),
             ],
             # ## # ##
