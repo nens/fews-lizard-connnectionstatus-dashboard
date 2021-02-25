@@ -1,0 +1,12 @@
+dash
+dash_core_components
+dash_html_components
+dash_table
+flask
+gunicorn
+pandas
+plotly
+requests
+dash-bootstrap-components
+joblib
+pillow
