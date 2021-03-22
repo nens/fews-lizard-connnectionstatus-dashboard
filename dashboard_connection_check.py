@@ -139,7 +139,7 @@ countrywides = timeserieslist.loc[timeserieslist.Type == "Country"]
 countrywides_unique = countrywides.Organization.unique()
 drinkings = timeserieslist.loc[timeserieslist.Type == "Drinking"]
 drinkings_unique = drinkings.Organization.unique()
-municipalitys = timeserieslist.loc[timeserieslist.Type == "Municapality"]
+municipalitys = timeserieslist.loc[timeserieslist.Type == "Municipality"]
 municipalitys_unique = municipalitys.Organization.unique()
 for waterboard in waterboards_unique:
     dict_waterboard[waterboard] = waterboards.loc[
@@ -465,7 +465,7 @@ content = html.Div(
                 ),
                 html.Br([]),
                 html.Br([]),
-                html.H5("Info About the System ??", style={"font-weight": "bold"}),
+                html.H5("Info About the System", style={"font-weight": "bold"}),
                 html.Br([]),
             ],
             # ## # ##

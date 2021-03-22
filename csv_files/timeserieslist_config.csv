@@ -14,8 +14,6 @@ Noord-Brabant;Province;source4;7e5d977b-7c6e-4f25-8d0c-cc74c439e480;15;name1
 KNMI;Country;source1;67a13238-1226-45df-89a0-6a137fcfd1a7;60;name2
 Vitens;Drinking;source2;7e5d977b-7c6e-4f25-8d0c-cc74c439e480;15;name3
 Utrecht;Municipality;source3;7e5d977b-7c6e-4f25-8d0c-cc74c439e480;15;name4
-<<<<<<< Updated upstream
-=======
 HeA;Waterboard;Wiski;8fd8ddfa-5f11-4476-9580-ae1cbf47ed9a;60;Zuidbroek
 HeA;Waterboard;Wiski;b533631e-4caf-49ed-8853-b71910bf5894;60;de Bult
 HeA;Waterboard;Wiski;0be9a5cf-3045-4813-b9cc-40d00b9dd585;60;Zuidlaren
@@ -26,4 +24,3 @@ HHNK;Waterboard;Pred Main;ffe77393-1da0-4874-b5b7-a2a4a976d084;60;energie
 HHNK;Waterboard;Pred Main;01d862aa-20bb-49fd-9fc8-ca65df821f7c;2;Pres.meting
 HHNK;Waterboard;LOGIC Texel;9932db3b-e8b8-40a6-92a9-0f60a36fee2a;60;V.gemeten
 HHNK;Waterboard;Energiesturing;c6fd37b9-5d83-4d21-b262-77cc151c8b7e;60;duurzamheidsignal
->>>>>>> Stashed changes

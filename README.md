@@ -16,7 +16,10 @@ Dashboard is configured from the timeserieslist_config.csv file in csv_files fol
 
 - Municipality
 
-You can add new time series for different organizations/ different sources to the csv file. **Check for spelling if an organization, source already exists in the csv file.**
+You can add new time series for different organizations/ different sources to the csv file. 
+**Check for spelling if an organization, source already exists in the csv file.**
+
+We added a csv_check.py that should rise an error if there is a problem with the csv file. 
 
 A new timeseries entry should have :
 
