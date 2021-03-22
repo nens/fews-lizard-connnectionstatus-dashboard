@@ -260,9 +260,9 @@ def figure_type(df_selected_type_organization):
         fig.add_trace(
             go.Bar(
                 x=df_selected_type_organization.index,
-                y=df_selected_type_organization[
+                y=round(df_selected_type_organization[
                     df_selected_type_organization.columns[i]
-                ],
+                ],0),
                 marker={
                     "color": df_selected_type_organization[
                         df_selected_type_organization.columns[i]
@@ -271,9 +271,9 @@ def figure_type(df_selected_type_organization):
                     "cmin": 0,
                     "cmax": 100,
                 },
-                text=df_selected_type_organization[
+                text=round(df_selected_type_organization[
                     df_selected_type_organization.columns[i]
-                ],
+                ],0),
                 textposition="auto",
                 name=df_selected_type_organization.columns[i],
             ),
@@ -281,7 +281,7 @@ def figure_type(df_selected_type_organization):
             col=1,
         )
 
-    fig.update_layout(showlegend=False, height=600, width=1000)
+    fig.update_layout(showlegend=False, height=1000, width=1000)
     for i in range(len(df_selected_type_organization.columns)):
         fig.update_yaxes(
             title_text=df_selected_type_organization.columns[i], row=i + 1, col=1
