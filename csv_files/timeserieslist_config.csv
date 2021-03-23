@@ -4,10 +4,6 @@ HHNK;Waterboard;TMX;dd02ec67-33d3-44cc-b918-729dd065ef7d;15;DeWaakzamheid
 HHNK;Waterboard;TMX;ec8ace15-69de-46f8-bd88-af3b465ab63b;15;Aagtendijk
 HHNK;Waterboard;WinCC OA;70c34442-ee33-4e56-8e2e-addeccd2ed02;2;Oudeschild
 HHNK;Waterboard;WinCC OA;7377bd4c-6e24-4fdc-836e-99a2049322a9;2;Zuidwijkring
-ZZ;Waterboard;WinCC OA;10a0d816-2dbc-4da2-ba58-e6c5836f9f85;2;BlauweKeet
-ZZ;Waterboard;RWS;3d823423-45f3-479b-ac9f-67853e7b1d8d;15;Delfzij
-ZZ;Waterboard;Tbox;3d823423-45f3-479b-ac9f-67853e7b1d8d;15;Everstekoog
-ZZ;Waterboard;Anexo;3d823423-45f3-479b-ac9f-67853e7b1d8d;15;Oudeschild2
 TRY;Waterboard;TMX;7e5d977b-7c6e-4f25-8d0c-cc74c439e480;15;Evert
 TRY;Waterboard;WinCC OA;3d823423-45f3-479b-ac9f-67853e7b1d8d;15;Evert2
 Noord-Brabant;Province;source4;7e5d977b-7c6e-4f25-8d0c-cc74c439e480;15;name1
@@ -24,3 +20,10 @@ HHNK;Waterboard;Pred Main;ffe77393-1da0-4874-b5b7-a2a4a976d084;60;energie
 HHNK;Waterboard;Pred Main;01d862aa-20bb-49fd-9fc8-ca65df821f7c;2;Pres.meting
 HHNK;Waterboard;LOGIC Texel;9932db3b-e8b8-40a6-92a9-0f60a36fee2a;60;V.gemeten
 HHNK;Waterboard;Energiesturing;c6fd37b9-5d83-4d21-b262-77cc151c8b7e;60;duurzamheidsignal
+ZZL;Waterboard;TMX;7992389a-07a4-4682-b8f4-19046193a730;15;Gemaal Vissering
+ZZL;Waterboard;Historian;dc6c5823-6552-4f46-af9c-4826369bf15a;15;Gemaal Wortman, buitenpeil
+ZZL;Waterboard;Historian;e596f1f4-188d-44a0-8109-dd397f11d889;15;Gemaal De Blocq van Kuffeler
+ZZL;Waterboard;Wareco;cca336ed-6ae3-48a2-bea1-7f15f57bfe41;60;kavel initiatief 309
+ZZL;Waterboard;Wareco;1fb94066-18fb-4328-b893-003560b8a008;60;Kavelsloot G81/G82
+ZZL;Waterboard;Delta;c1d2ffd0-5ff8-4c43-830c-87a5ee482bda;1440;Rioolgemaal De Steiger
+ZZL;Waterboard;Delta;5cb8fbea-0269-4c14-860c-d0eac7796ff2;1440;Rioolgemaal Vleugelnootsingel
