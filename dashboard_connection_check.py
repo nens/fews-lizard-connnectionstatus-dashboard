@@ -94,7 +94,10 @@ def get_daily_counts(timeseries_list, times_to_check, times_nan):
         df = pd.DataFrame(response.json()["results"])
         try:
             for i in range(0, len(df)):
-                df.first_timestamp[i] = df.first_timestamp[i].split("T")[0]
+                if df.first_timestamp[i] != None:
+                    df.first_timestamp[i] = df.first_timestamp[i].split("T")[0]
+                else:
+                    df.first_timestamp[i] = times_to_check[i].split("T")[0]
             df.set_index("first_timestamp", inplace=True)
         except:
             df = pd.DataFrame(index=times_nan[0:-1], columns=["count"])
@@ -260,9 +263,12 @@ def figure_type(df_selected_type_organization):
         fig.add_trace(
             go.Bar(
                 x=df_selected_type_organization.index,
-                y=round(df_selected_type_organization[
-                    df_selected_type_organization.columns[i]
-                ],0),
+                y=round(
+                    df_selected_type_organization[
+                        df_selected_type_organization.columns[i]
+                    ],
+                    0,
+                ),
                 marker={
                     "color": df_selected_type_organization[
                         df_selected_type_organization.columns[i]
@@ -271,9 +277,12 @@ def figure_type(df_selected_type_organization):
                     "cmin": 0,
                     "cmax": 100,
                 },
-                text=round(df_selected_type_organization[
-                    df_selected_type_organization.columns[i]
-                ],0),
+                text=round(
+                    df_selected_type_organization[
+                        df_selected_type_organization.columns[i]
+                    ],
+                    0,
+                ),
                 textposition="auto",
                 name=df_selected_type_organization.columns[i],
             ),
