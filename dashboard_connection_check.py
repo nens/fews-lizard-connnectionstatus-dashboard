@@ -31,6 +31,7 @@ app.config.suppress_callback_exceptions = True
 
 username = "__key__"
 password = "FS3cDFnh.QMGHUH8owuiSkezsV6SHfq6IkFe0YWeO"
+
 headers = {"username": username, "password": password}
 
 
@@ -62,7 +63,8 @@ def read_csv_withheaders(csv_name):
 
 
 timeserieslist = read_csv_withheaders("csv_files/timeserieslist_config.csv")
-
+rasterlist = read_csv_withheaders("csv_files/rasterlist_config.csv")
+checklist = pd.concat([timeserieslist,rasterlist], axis=0)
 
 def count_to_be(td_minutes, time_series_list):
     count_to_be = {}
@@ -72,13 +74,13 @@ def count_to_be(td_minutes, time_series_list):
     return count_to_be
 
 
-counttobe = count_to_be(td, timeserieslist)
+counttobe = {**count_to_be(td, timeserieslist), **count_to_be(td, rasterlist)}
 
 
-def get_daily_counts(timeseries_list, times_to_check, times_nan):
+def get_daily_counts(timeserieslist, times_to_check, times_nan):
     daily_counts = {}
     events_url = "https://nens.lizard.net/api/v4/timeseries/"
-    for index, row in timeseries_list.iterrows():
+    for index, row in timeserieslist.iterrows():
         get_url = f"{events_url}{row['UUID']}/aggregates/"
         response = requests.get(
             url=get_url,
@@ -102,48 +104,81 @@ def get_daily_counts(timeseries_list, times_to_check, times_nan):
         except:
             df = pd.DataFrame(index=times_nan[0:-1], columns=["count"])
         daily_counts[row["naamlizard"]] = df
-    df_counts = daily_counts[timeseries_list.naamlizard[0]].copy()
-    df_counts.rename(columns={"count": timeseries_list.naamlizard[0]}, inplace=True)
-    for i in range(1, len(timeseries_list)):
-        df_counts[timeseries_list.naamlizard[i]] = daily_counts[
-            timeseries_list.naamlizard[i]
+        
+    df_counts = daily_counts[timeserieslist.naamlizard[0]].copy()
+    df_counts.rename(columns={"count": timeserieslist.naamlizard[0]}, inplace=True)
+    for i in range(1, len(timeserieslist)):
+        df_counts[timeserieslist.naamlizard[i]] = daily_counts[
+            timeserieslist.naamlizard[i]
         ]["count"]
     df_counts.replace(np.NaN, 0, inplace=True)
     return df_counts
 
+def get_daily_counts_rast(rasterlist, times_to_check, times_nan):
+    daily_counts = {}
+    events_url = "https://nens.lizard.net/api/v4/rasters/"
+    for index, row in rasterlist.iterrows():
+        get_url = f"{events_url}{row['UUID']}/point"
+        geom = "POINT({} {})".format(row["x"],row["y"])
+        response = requests.get(
+            url=get_url,
+            headers=headers,
+            params={
+                "start": str(times_to_check[0]),
+                "stop": str(times_to_check[-1]),
+                "geom": geom,
+                "frequency": "D",
+                "statistic": "count"
+            }
+        )
 
-def data_availability(counts_timeseries, count_to_be, timeseries_list):
-    data_availability = pd.DataFrame(counts_timeseries)
-    count_to_be_values = pd.DataFrame(count_to_be.values()).values
-    data = (100 * data_availability.values) // numpy.transpose(
-        count_to_be_values, axes=None
-    )
-    percentage_availability_daily = pd.DataFrame(
-        data=data,
-        index=pd.DataFrame(counts_timeseries).index,
-        columns=timeseries_list["naamlizard"].values,
-    )
+        df = pd.DataFrame(response.json()["results"])
+        try:
+            df["time"] = df["time"].apply(lambda s: s.split("T")[0])
+            df.set_index("time", inplace=True)
+        except:
+            df = pd.DataFrame(index=times_nan[0:-1], columns=["value"])
+        daily_counts[row["naamlizard"]] = df
+        
+    df_counts = daily_counts[rasterlist.naamlizard[0]].copy()
+    df_counts.rename(columns={"value": rasterlist.naamlizard[0]}, inplace=True)
+    for i in range(1, len(rasterlist)):
+        df_counts[rasterlist.naamlizard[i]] = daily_counts[
+            rasterlist.naamlizard[i]
+        ]["value"]
+    df_counts.replace(np.NaN, 0, inplace=True)
+    return df_counts
+
+def data_availability(counts_timeseries, counts_rasters, count_to_be):
+    data_availability = pd.concat([counts_timeseries, counts_rasters],axis=1)
+    
+    for col in data_availability:
+        data_availability[col] = 100 * data_availability[col] / count_to_be[col]
+    
     percentage_availability_average = pd.DataFrame(
-        numpy.mean(percentage_availability_daily)
+        numpy.mean(data_availability)
     )
-    return percentage_availability_daily, percentage_availability_average
-
+    return data_availability, percentage_availability_average
 
 dict_waterboard = {}
 dict_province = {}
 dict_drinking = {}
 dict_country = {}
 dict_municipality = {}
-waterboards = timeserieslist.loc[timeserieslist.Type == "Waterboard"]
+dict_g4aw = {}
+waterboards = checklist.loc[checklist.Type == "Waterboard"]
 waterboards_unique = waterboards.Organization.unique()
-provinces = timeserieslist.loc[timeserieslist.Type == "Province"]
+provinces = checklist.loc[checklist.Type == "Province"]
 provinces_unique = provinces.Organization.unique()
-countrywides = timeserieslist.loc[timeserieslist.Type == "Country"]
+countrywides = checklist.loc[checklist.Type == "Country"]
 countrywides_unique = countrywides.Organization.unique()
-drinkings = timeserieslist.loc[timeserieslist.Type == "Drinking"]
+drinkings = checklist.loc[checklist.Type == "Drinking"]
 drinkings_unique = drinkings.Organization.unique()
-municipalitys = timeserieslist.loc[timeserieslist.Type == "Municipality"]
+municipalitys = checklist.loc[checklist.Type == "Municipality"]
 municipalitys_unique = municipalitys.Organization.unique()
+g4aws = checklist.loc[checklist.Type == "G4AW"]
+g4aws_unique = g4aws.Organization.unique()
+
 for waterboard in waterboards_unique:
     dict_waterboard[waterboard] = waterboards.loc[
         waterboards.Organization == (waterboard)
@@ -160,27 +195,32 @@ for municipality in municipalitys_unique:
     dict_municipality[municipality] = municipalitys.loc[
         municipalitys.Organization == (municipality)
     ]
+for municipality in municipalitys_unique:
+    dict_municipality[municipality] = municipalitys.loc[
+        municipalitys.Organization == (municipality)
+    ]
+for g4aw in g4aws_unique:
+    dict_g4aw[g4aw] = g4aws.loc[g4aws.Organization == (g4aw)]
 
 
-def connection_status_overal(percentage_availability_daily, timeserieslist):
+
+def connection_status_overal(percentage_availability_daily, checklist):
     con_stat = []
     con_stat = pd.DataFrame(columns=["Type", "Available"])
     i = 0
-    type_unique = timeserieslist.Type.unique()
+    type_unique = checklist.Type.unique()
     for typ in type_unique:
         con_stat.loc[i] = [
             typ,
             percentage_availability_daily[
-                timeserieslist.loc[timeserieslist.Type == typ].naamlizard
+                checklist.loc[checklist.Type == typ].naamlizard
             ].values.mean(),
         ]
         i = i + 1
     con_stat["Missing"] = 100 - con_stat["Available"]
     return con_stat
 
-
-# In[ ]:
-
+#%%
 
 def figure_overall_connection(con_stat):
     labels = ["Available", "Missing"]
@@ -190,6 +230,7 @@ def figure_overall_connection(con_stat):
         cols=len(con_stat),
         specs=[
             [
+                {"type": "domain"},
                 {"type": "domain"},
                 {"type": "domain"},
                 {"type": "domain"},
@@ -242,6 +283,9 @@ def select_type_data(percentage_availability_daily, timeserieslist, type_selecti
     elif type_selection == "Municipality":
         dict_selected = dict_municipality
         type_selected = municipalitys
+    elif type_selection == "G4AW":
+        dict_selected = dict_g4aw
+        type_selected = g4aws       
     for i in range(len((type_selected.Organization.unique()))):
         df_selected_type[type_selected.Organization.unique()[i]] = (
             df_selected_type[
@@ -316,6 +360,9 @@ def select_organization_source(
     elif type_selection == "Municipality":
         dict_selected = dict_municipality
         uniq_selected = municipalitys_unique
+    elif type_selection == "G4AW":
+         dict_selected = dict_g4aw
+         uniq_selected = g4aws_unique       
     selected_organization = uniq_selected[selectionfromfigure]
     df_selected_type = percentage_availability_daily[
         dict_selected[(selected_organization)].naamlizard
@@ -463,6 +510,7 @@ content = html.Div(
                         {"label": "Municipalities", "value": "Municipality"},
                         {"label": "Countrywide", "value": "Country"},
                         {"label": "Drinking Water Companies", "value": "Drinking"},
+                        {"label": "G4AW Projects", "value": "G4AW"},
                     ],
                     value="Waterboard",
                 ),
@@ -658,9 +706,10 @@ def updatedate(input):
 def get_data_from_lizard(date_value):
     start = datetime.strptime(date_value, "%Y-%m-%d")
     td, times_to_check, times_nan = create_lizard_api_timestamp(7, start)
-    counts = get_daily_counts(timeserieslist, times_to_check, times_nan)
+    counts_ts = get_daily_counts(timeserieslist, times_to_check, times_nan)
+    counts_rast = get_daily_counts_rast(rasterlist, times_to_check, times_nan)
     percentage_availability_daily, percentage_availability_average = data_availability(
-        counts, counttobe, timeserieslist
+        counts_ts, counts_rast, counttobe
     )
     datasets_rf = {
         "percentage_availability_daily": percentage_availability_daily.to_json(
@@ -686,7 +735,7 @@ def update_overal_connection(jsonified_cleaned_data):
     percentage_availability_daily = pd.read_json(
         datasets_rf["percentage_availability_daily"], orient="split"
     )
-    con_stat = connection_status_overal(percentage_availability_daily, timeserieslist)
+    con_stat = connection_status_overal(percentage_availability_daily, checklist)
     figure = figure_overall_connection(con_stat)
     return figure
 
