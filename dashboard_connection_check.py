@@ -80,6 +80,7 @@ counttobe = {**count_to_be(td, timeserieslist), **count_to_be(td, rasterlist)}
 def get_daily_counts(timeserieslist, times_to_check, times_nan):
     daily_counts = {}
     events_url = "https://nens.lizard.net/api/v4/timeseries/"
+    days_to_check = [dt.split("T")[0] for dt in times_to_check ]
     for index, row in timeserieslist.iterrows():
         get_url = f"{events_url}{row['UUID']}/aggregates/"
         response = requests.get(
@@ -93,14 +94,15 @@ def get_daily_counts(timeserieslist, times_to_check, times_nan):
             },
         )
 
-        df = pd.DataFrame(response.json()["results"])
+        
         try:
-            for i in range(0, len(df)):
-                if df.first_timestamp[i] != None:
-                    df.first_timestamp[i] = df.first_timestamp[i].split("T")[0]
-                else:
-                    df.first_timestamp[i] = times_to_check[i].split("T")[0]
+            df = pd.DataFrame(response.json()["results"])
+            df=df[df["first_timestamp"] == df["first_timestamp"]] #nanfilter
             df.set_index("first_timestamp", inplace=True)
+            df.index = df.index.map(lambda s: s.split("T")[0])
+            #Disregard last day as we notate the first timestamp of each period
+            df = df[df.index.isin(days_to_check[0:-1])]
+            
         except:
             df = pd.DataFrame(index=times_nan[0:-1], columns=["count"])
         daily_counts[row["naamlizard"]] = df
@@ -117,6 +119,7 @@ def get_daily_counts(timeserieslist, times_to_check, times_nan):
 def get_daily_counts_rast(rasterlist, times_to_check, times_nan):
     daily_counts = {}
     events_url = "https://nens.lizard.net/api/v4/rasters/"
+    days_to_check = [dt.split("T")[0] for dt in times_to_check ]
     for index, row in rasterlist.iterrows():
         get_url = f"{events_url}{row['UUID']}/point"
         geom = "POINT({} {})".format(row["x"],row["y"])
@@ -128,14 +131,19 @@ def get_daily_counts_rast(rasterlist, times_to_check, times_nan):
                 "stop": str(times_to_check[-1]),
                 "geom": geom,
                 "frequency": "D",
-                "statistic": "count"
+                "statistic": "count",
+                "label": "left"
             }
         )
-
-        df = pd.DataFrame(response.json()["results"])
+        
         try:
-            df["time"] = df["time"].apply(lambda s: s.split("T")[0])
+            df = pd.DataFrame(response.json()["results"])
+            df = df[df["time"] == df["time"]] #nanfilter
             df.set_index("time", inplace=True)
+            df.index = df.index.map(lambda s: s.split("T")[0])
+            #Disregard last timestep in times_to_check, as we use label left
+            df = df[df.index.isin(days_to_check[0:-1])]
+            
         except:
             df = pd.DataFrame(index=times_nan[0:-1], columns=["value"])
         daily_counts[row["naamlizard"]] = df
@@ -757,7 +765,7 @@ def update_per_organization(organization_type, jsonified_cleaned_data):
         datasets_rf["percentage_availability_daily"], orient="split"
     )
     df_selected_type_organization = select_type_data(
-        percentage_availability_daily, timeserieslist, organization_type
+        percentage_availability_daily, checklist, organization_type
     )
     figure = figure_type(df_selected_type_organization)
     return figure

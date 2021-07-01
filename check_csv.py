@@ -8,12 +8,13 @@ def read_csv_withheaders(csv_name):
 
 
 timeserieslist = read_csv_withheaders("csv_files/timeserieslist_config.csv")
+rasterlist = read_csv_withheaders("csv_files/rasterlist_config.csv")
+checklist = pd.concat([timeserieslist,rasterlist], axis=0)
 
-
-if len(timeserieslist.Type.unique()) != 5:
+if len(checklist.Type.unique()) != 6:
     raise ValueError("ERROR - Time series added with a wrong organization type") 
 
-if len(timeserieslist.naamlizard.unique()) != len(timeserieslist):
+if len(checklist.naamlizard.unique()) != len(checklist):
     raise ValueError("ERROR - Time series added with an already existing name") 
     
 # if len(timeserieslist.UUID.unique()) != len(timeserieslist):
