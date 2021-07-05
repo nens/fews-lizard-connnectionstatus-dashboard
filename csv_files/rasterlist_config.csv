@@ -1,3 +1,6 @@
 Organization;Type;Source;UUID;interval;naamlizard;x;y
 NRR;Country;NRR v2;b0f32b2a-fa06-4353-b298-223f95c24794;5;NRR Realtime 5m;5.16;52.1
+KNMI;Country;KDP rasters;ea192be7-dc45-492e-b496-d8211a75993c;1440;Makkink evap;5.16;52.1
 SpiceUp;G4AW;Vandersat;cc97931c-3199-416a-a93f-9a16b8ce98e3;1440;SM anomaly;105.9;-2
+SpiceUp;G4AW;IPB Climate;5c02ab43-52fa-4a4b-8b4f-fa3739c9af65;1440;Rain forecast;105.9;-2
+SpiceUp;G4AW;IPB Climate;1b8c990b-3cf6-4e10-9452-c2d4707cac12;1440;Temperature forcast;105.9;-2
